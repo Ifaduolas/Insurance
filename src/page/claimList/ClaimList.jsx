@@ -1,39 +1,65 @@
-import React, {useEffect, useState} from 'react'
-import "./ClaimList.css"
-import axios from "axios"
+import React, { useState } from 'react';
+import './ClaimList.css';
 
-const ClaimList = ({ claims }) => {
-  const [claimList, setClaimList] = useState([]);
+// Sample data for the claims
+const claims = [
+  { id: 1, claimNumber: 'CLM-001', claimType: 'Health Insurance', claimDate: '2024-08-20', status: 'Pending', amount: '₦50,000.00' },
+  { id: 2, claimNumber: 'CLM-002', claimType: 'Auto Insurance', claimDate: '2024-08-18', status: 'Approved', amount: '₦150,000.00' },
+  { id: 3, claimNumber: 'CLM-003', claimType: 'Property Insurance', claimDate: '2024-08-15', status: 'Rejected', amount: '₦200,000.00' },
+];
 
-  useEffect(() => {
-    const fetchClaims = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/claims');
-        setClaimList(response.data);
-      } catch (error) {
-        console.error('Error fetching claims:', error);
-      }
-    };
+// ClaimList component to display a list of claims with filtering
+const ClaimList = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredClaims, setFilteredClaims] = useState(claims);
 
-    fetchClaims();
-  }, [claims]);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // Filter claims based on search term
+    const filtered = claims.filter((claim) =>
+      claim.claimNumber.toLowerCase().includes(value.toLowerCase()) ||
+      claim.claimType.toLowerCase().includes(value.toLowerCase()) ||
+      claim.status.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setFilteredClaims(filtered);
+  };
 
   return (
-    <div className='claim-list-container'>
-      <h2>Claims List</h2>
-      <ul className='claim-list'>
-        {claimList.map((claim, index) => (
-          <li key={index} className='claim-list'>
-            <p><strong>Name:</strong> {claim.name}</p>
-            <p><strong>Policy Number:</strong> {claim.policyNumber}</p>
-            <p><strong>Claim Amount:</strong> ${claim.claimAmount}</p>
-            <p><strong>Description:</strong> {claim.description}</p>
-            {claim.imageUrl && <img src={`http://localhost:5000${claim.imageUrl}`} alt="Claim" width="100" />}
-          </li>
-        ))}
-      </ul>
+    <div className="claim-list">
+      <h2>Insurance Claim Management System</h2>
+      <input
+        type="text"
+        placeholder="Search claims..."
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+      <table>
+        <thead>
+          <tr>
+            <th>Claim Number</th>
+            <th>Claim Type</th>
+            <th>Claim Date</th>
+            <th>Status</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredClaims.map((claim) => (
+            <tr key={claim.id}>
+              <td>{claim.claimNumber}</td>
+              <td>{claim.claimType}</td>
+              <td>{claim.claimDate}</td>
+              <td>{claim.status}</td>
+              <td>{claim.amount}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  )
-}
+  );
+};
 
 export default ClaimList;
