@@ -34,13 +34,13 @@ function Footer() {
                   <Link to="/">About</Link>
                 </li>
                 <li>
-                  <Link to="/">Clam</Link>
+                  <Link to="/">ClamForm</Link>
                 </li>
                 <li>
-                  <Link to="/">Blog</Link>
+                  <Link to="/">ClaimList</Link>
                 </li>
                 <li>
-                  <Link to="/">Come</Link>
+                  <Link to="/">Contact</Link>
                 </li>
           </ul>
           <ul className="box input-box">
